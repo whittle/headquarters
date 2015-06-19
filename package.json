@@ -21,6 +21,7 @@
     "bluebird": "^2.9.30",
     "debug": "^2.2.0",
     "lodash": "^3.9.3",
+    "moment": "^2.10.3",
     "request-promise": "^0.4.2",
     "yargs": "^3.11.0"
   }

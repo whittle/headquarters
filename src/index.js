@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var argv = require('yargs').argv;
 var debug = require('debug')('headquarters');
+var moment = require('moment');
 var Promise = require('bluebird');
 
 var config = require('./config');
@@ -22,7 +23,8 @@ function main() {
   });
 
   durations.then(function(ds) {
-    console.log(statistics.all(ds));
+    var output = formatStats(statistics.all(ds)).join('\n') + '\n';
+    process.stdout.write(output);
   }).catch(function(err) {
     debug('Error!', err);
     process.exit(1);
@@ -35,6 +37,23 @@ function stringifyAddress(address) {
           address.city + ',',
           address.state,
           address.zip].join(' ');
+}
+
+// Turn the stats object returned by statistics.all into an array of
+// strings ready to be output.
+function formatStats(stats) {
+  var maxKeyLength = _(stats).keys().map(_.property('length')).max();
+
+  return _.map(stats, function(val, key) {
+    var label = _.padLeft(_.capitalize(key), maxKeyLength);
+    return [label, formatSeconds(val)].join(': ');
+  });
+}
+
+// Turn a number representing a duration in seconds into a formatted
+// string representing the same.
+function formatSeconds(seconds) {
+  return moment.duration(seconds, 'seconds').humanize();
 }
 
 main();
