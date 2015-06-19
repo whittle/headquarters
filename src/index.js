@@ -7,6 +7,7 @@ var Promise = require('bluebird');
 
 var config = require('./config');
 var directions = require('./directions');
+var statistics = require('./statistics');
 
 function main() {
   var destination = argv._.join(' ');
@@ -21,7 +22,7 @@ function main() {
   });
 
   durations.then(function(ds) {
-    console.log(ds);
+    console.log(statistics.all(ds));
   }).catch(function(err) {
     debug('Error!', err);
     process.exit(1);
