@@ -15,8 +15,6 @@ function main() {
                             stringifyAddress);
   var requests = _.map(config.LOCATIONS, mkRequest);
 
-  var getDuration = _.compose(directions.getDuration,
-                              directions.handleResponse);
   var durations = Promise.map(requests, function(resp) {
     return directions.handleResponse(resp)
       .then(directions.getDuration);
