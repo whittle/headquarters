@@ -2,17 +2,38 @@
 
 var _ = require('lodash');
 var argv = require('yargs').argv;
-var request = require('request');
+var debug = require('debug')('headquarters');
+var Promise = require('bluebird');
+var request = require('request-promise');
 var url = require('url');
 
 var config = require('./config');
 
 function main() {
   var address = argv._.join(' ');
-  var qs = _.map(config.LOCATIONS,
-                 _.compose(mkUrl, mkParams(address), stringifyAddress));
+  var requests = _.map(config.LOCATIONS,
+                       _.compose(request,
+                                 mkUrl,
+                                 mkParams(address),
+                                 stringifyAddress));
+  var durations = Promise.map(requests, function(resp) {
+    var body = JSON.parse(resp);
+    debug('Status', body.status);
+    return getDuration(body);
+  }).then(function(ds) {
+    console.log(ds);
+  });
+}
 
-  console.log(qs);
+// Takes a Google Directions response that’s been parsed into an
+// object, and returns a total duration in seconds as a
+// number. Assumes that the response did not error.
+function getDuration(respBody) {
+  // FIXME: Assumes that there’s exactly one route and that it has
+  // exactly one leg.
+  var duration = respBody.routes[0].legs[0].duration;
+  debug('Duration', duration.text);
+  return duration.value;
 }
 
 // Make a Google Directions API URL from an object with the necessary
