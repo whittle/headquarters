@@ -12,8 +12,9 @@ var statistics = require('./statistics');
 
 function main() {
   var destination = argv._.join(' ');
+  var arrival = nextWednesdayAtTen();
 
-  var mkRequest = _.compose(directions.mkRequest(destination),
+  var mkRequest = _.compose(directions.mkRequest(destination, arrival),
                             stringifyAddress);
   var requests = _.map(config.LOCATIONS, mkRequest);
 
@@ -29,6 +30,19 @@ function main() {
     debug('Error!', err);
     process.exit(1);
   });
+}
+
+// Returns the seconds since midnight, 1Jan1970 UTC for 10:00a local
+// time on Wednesday of next week.
+function nextWednesdayAtTen() {
+  var now = moment();
+
+  return moment({
+    year: now.year(),
+    hour: 10})
+    .week(now.week() + 1)
+    .day('Wednesday')
+    .unix();
 }
 
 // Just turn an object from the locations file into a string.

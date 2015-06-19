@@ -11,12 +11,12 @@ var directions = {
   // Curried function to turn a destination address (as a string) and
   // an origin address (both as strings) into a params hash suitable
   // for the Directions API.
-  mkParams: function(dest) {
+  mkParams: function(dest, arrivalTime) {
     return function(origin) {
-      // TODO: include arrival_time
       return {
         origin: origin,
         destination: dest,
+        arrival: arrivalTime,
         mode: config.MODE,
         key: config.GOOGLE_PUBLIC_API_KEY
       };
@@ -32,8 +32,10 @@ var directions = {
 
   // Curried function to generate a promise to request the Google
   // Directions from the origin argument to the destination argument.
-  mkRequest: function(dest) {
-    return _.compose(request, directions.mkUrl, directions.mkParams(dest));
+  mkRequest: function(dest, arrivalTime) {
+    return _.compose(request,
+                     directions.mkUrl,
+                     directions.mkParams(dest, arrivalTime));
   },
 
   // Attempts to parse the given response as JSON, checks the status
