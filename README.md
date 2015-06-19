@@ -9,6 +9,8 @@ should be valid JSON, containing an array of objects with the
 following keys: "name", "street", "city", "state", "zip". All values
 should be strings.
 
-  * Step 2. ???
+  * Step 2. Configure with the following environment variables:
+
+    - GOOGLE_PUBLIC_API_KEY: requires access to the Directions API
 
   * Step 3. Profit
