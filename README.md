@@ -11,6 +11,14 @@ should be strings.
 
   * Step 2. Configure with the following environment variables:
 
-    - GOOGLE_PUBLIC_API_KEY: requires access to the Directions API
+    - GOOGLE_DIRECTIONS_API_URL (opt): defaults to
+      "https://maps.googleapis.com/maps/api/directions/json"
 
-  * Step 3. Profit
+    - GOOGLE_PUBLIC_API_KEY (req): requires access to the Directions
+      API
+
+    - MODE (opt): the mode of transportation to use for all routes;
+      defaults to "transit"
+
+  * Step 3. Run from the command line, e.g.: `npm start 221B Baker
+    St. Marylebone, London NW1`
